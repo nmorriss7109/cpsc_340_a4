@@ -38,7 +38,7 @@ class logReg:
 
 class logRegL0(logReg):
     # L0 Regularized Logistic Regression
-    def __init__(self, L0_lambda=1.0, verbose=2, maxEvals=400):
+    def __init__(self, L0_lambda=0.001, verbose=2, maxEvals=400):
         self.verbose = verbose
         self.L0_lambda = L0_lambda
         self.maxEvals = maxEvals
@@ -65,17 +65,57 @@ class logRegL0(logReg):
                 if i in selected:
                     continue
 
+                # Fit the model with 'i' added to the features,
                 selected_new = selected | {i} # tentatively add feature "i" to the seected set
+                self.w = np.zeros(d)
+                self.w[list(selected_new)], _ = minimize(list(selected_new))
 
-                # TODO for Q2.3: Fit the model with 'i' added to the features,
                 # then compute the loss and update the minLoss/bestFeature
-
+                loss = utils.classification_error(self.predict(X), y)
+                if loss < minLoss:
+                    minLoss = loss
+                    bestFeature = i
 
             selected.add(bestFeature)
 
         self.w = np.zeros(d)
         self.w[list(selected)], _ = minimize(list(selected))
 
+class logRegL2(logReg):
+    #L2 Regularized Logistic Regression
+    def __init__ (self, lammy=1.0, verbose=2, maxEvals=400):
+        self.lammy = lammy
+        self.verbose = verbose
+        self.maxEvals = maxEvals
+
+    def funObj(self, w, X, y):
+        yXw = y * X.dot(w)
+
+        # Calculate the function value
+        f = np.sum(np.log(1. + np.exp(-yXw))) + (self.lammy/2)*np.dot(w.T, w)
+
+        # Calculate the gradient value
+        reg_term = self.lammy * w
+        res = - y / (1. + np.exp(yXw))
+        g = X.T.dot(res) + reg_term
+
+        return f, g
+
+class logRegL1(logReg):
+    #L2 Regularized Logistic Regression
+    def __init__ (self, L1_lambda=1.0, verbose=2, maxEvals=400):
+        self.L1_lambda = L1_lambda
+        self.verbose = verbose
+        self.maxEvals = maxEvals
+
+    def fit(self,X, y):
+        n, d = X.shape
+
+        # Initial guess
+        self.w = np.zeros(d)
+        utils.check_gradient(self, X, y)
+        (self.w, f) = findMin.findMinL1(self.funObj, self.w, self.L1_lambda,
+                                      self.maxEvals, X, y, verbose=self.verbose)
 
 class leastSquaresClassifier:
     def fit(self, X, y):

@@ -27,7 +27,7 @@ def load_dataset(dataset_name):
     elif dataset_name == "multiData":
         with open(os.path.join('..', 'data', 'multiData.pkl'), 'rb') as f:
             data = pickle.load(f)
-        
+
         X, y = data['X'], data['y']
         Xvalid, yvalid = data['Xvalidate'], data['yvalidate']
 
