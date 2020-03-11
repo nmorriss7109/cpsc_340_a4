@@ -54,7 +54,7 @@ if __name__ == "__main__":
         XBin, yBin = data['X'], data['y']
         XBinValid, yBinValid = data['Xvalid'], data['yvalid']
 
-        model = linear_model.logRegL0(L0_lambda=1.0, maxEvals=400)
+        model = linear_model.logRegL0(L0_lambda=0.00001, maxEvals=400)
         model.fit(XBin,yBin)
 
         print("\nTraining error %.3f" % utils.classification_error(model.predict(XBin),yBin))
@@ -67,6 +67,21 @@ if __name__ == "__main__":
         XBinValid, yBinValid = data['Xvalid'], data['yvalid']
 
         # TODO
+        #L1-Regression with sklearn
+        model = LogisticRegression(penalty='l1', fit_intercept=False, solver='liblinear')
+        model.fit(XBin, yBin)
+        print("\nL1-Regularization:")
+        print("\nTraining error %.3f" % utils.classification_error(model.predict(XBin),yBin))
+        print("Validation error %.3f" % utils.classification_error(model.predict(XBinValid), yBinValid))
+        print("# nonZeros: %d" % (model.coef_ != 0).sum())
+
+        #L2-Regression with sklearn
+        model = LogisticRegression(penalty='l2', fit_intercept=False, solver='liblinear')
+        model.fit(XBin, yBin)
+        print("\n\nL2-Regularization:")
+        print("\nTraining error %.3f" % utils.classification_error(model.predict(XBin),yBin))
+        print("Validation error %.3f" % utils.classification_error(model.predict(XBinValid), yBinValid))
+        print("# nonZeros: %d" % (model.coef_ != 0).sum())
 
     elif question == "3":
         data = utils.load_dataset("multiData")

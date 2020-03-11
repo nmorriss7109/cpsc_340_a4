@@ -6,7 +6,7 @@ import utils
 
 class logReg:
     # Logistic Regression
-    def __init__(self, verbose=0, maxEvals=100):
+    def __init__(self, verbose=2, maxEvals=100):
         self.verbose = verbose
         self.maxEvals = maxEvals
         self.bias = True
@@ -38,7 +38,7 @@ class logReg:
 
 class logRegL0(logReg):
     # L0 Regularized Logistic Regression
-    def __init__(self, L0_lambda=0.001, verbose=2, maxEvals=400):
+    def __init__(self, L0_lambda=1, verbose=2, maxEvals=400):
         self.verbose = verbose
         self.L0_lambda = L0_lambda
         self.maxEvals = maxEvals
