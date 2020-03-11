@@ -109,4 +109,13 @@ if __name__ == "__main__":
         XMulti, yMulti = data['X'], data['y']
         XMultiValid, yMultiValid = data['Xvalid'], data['yvalid']
 
-        # TODO
+        model = LogisticRegression(C=999999999, fit_intercept=False)
+        model.fit(XMulti, yMulti)
+        print("Training error %.3f" % utils.classification_error(model.predict(XMulti), yMulti))
+        print("Validation error %.3f" % utils.classification_error(model.predict(XMultiValid), yMultiValid))
+
+        model = LogisticRegression(multi_class="multinomial", solver="lbfgs", C=999999999, fit_intercept=False)
+        model.fit(XMulti, yMulti)
+        print("Training error %.3f" % utils.classification_error(model.predict(XMulti), yMulti))
+        print("Validation error %.3f" % utils.classification_error(model.predict(XMultiValid), yMultiValid))
+
